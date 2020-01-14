@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="M1n007">
+
+  <title>URL-Extractor</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+          <span>URL-Extractor</span>
+      </nav>
+
+      <div class="container-fluid" style="padding: 100px;">
+        <div class="row">
+            <div class="col-6">
+                <form>
+                    <div class="form-group">
+                    <label for="wanttoextract">What do you want to extract ?</label>
+                        <textarea class="form-control" id="wanttoextract" rows="3" style="height: 300px;"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="col-1">
+                <div class="row justify-content-around">
+                </div>
+                <div class="flex-container1">
+                    <div class="row1"> 
+                        <button type="button" class="btn btn-outline-info" onclick="allProcess()" style="font-size: 12px;">Extract</button>
+                        <div style="padding-top: 10px;">
+                            <button type="button" class="btn btn-outline-info" onclick="copy()" style="font-size: 7px;">Copy Result</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <form>
+                    <div class="form-group">
+                    <label for="result">Result</label>
+                        <textarea class="form-control" id="result" rows="3" style="height: 300px;"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Menu Toggle Script -->
+  <script type="text/javascript">
+        function copy() {
+            var copyText = document.getElementById("result");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Text Copied To Clipboard");
+        }
+
+      function getWantToExract(){
+          data = document.getElementById('wanttoextract');
+          return data.value;
+      }
+
+      function allProcess(){
+          const valueTR = getWantToExract();
+          const regex = /((\w+:\/\/\S+)|(\w+[\.:]\w+\S+))[^\s,\.]/gim;
+          let m;
+          const newData = [];
+
+            while ((m = regex.exec(valueTR)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+                
+                // The result can be accessed through the `m`-variable.
+                m.forEach((match, groupIndex) => {
+                    // console.log(match)
+                    if (match && match !== undefined) {
+                        newData.push(match.replace(/(&nbsp;|<([^>]+)>)/ig, ''))
+                    }
+                    
+                });
+            }
+
+        const newURL = [];
+
+          for (let index = 0; index < newData.length; index++) {
+              const oldData = newData[index];
+            //   console.log(oldData)
+              if (oldData.includes('https') || oldData.includes('http')) {
+                  
+                  newURL.push(oldData.replace('"', ''))
+              }
+              
+          }
+
+        //   document
+
+        document.getElementById('result').value = newURL.join('\n');
+
+        //   console.log(newURL);
+      }
+  </script>
+
+</body>
+
+</html>
